@@ -130,7 +130,6 @@ jobs:
           "8080": "80"
           "8443": "443"
           udp:"8081": "80"
-        usesh: true
         debug: true
         debug-on-error: ${{ vars.DEBUG_ON_ERROR }}
         sync: sshfs
@@ -311,7 +310,6 @@ jobs:
           "8080": "80"
           "8443": "443"
           udp:"8081": "80"
-        usesh: true
         debug: true
         debug-on-error: ${{ vars.DEBUG_ON_ERROR }}
         sync: nfs
@@ -500,7 +498,6 @@ jobs:
           "8080": "80"
           "8443": "443"
           udp:"8081": "80"
-        usesh: true
         debug: true
         debug-on-error: ${{ vars.DEBUG_ON_ERROR }}
         sync: scp
@@ -687,7 +684,6 @@ jobs:
           "8080": "80"
           "8443": "443"
           udp:"8081": "80"
-        usesh: true
         debug: true
         debug-on-error: ${{ vars.DEBUG_ON_ERROR }}
         disable-cache: ${{ matrix.disableCache }}
@@ -863,7 +859,6 @@ jobs:
           "8080": "80"
           "8443": "443"
           udp:"8081": "80"
-        usesh: true
         debug: true
         debug-on-error: ${{ vars.DEBUG_ON_ERROR }}
         custom-shell-name: vmsh
@@ -987,7 +982,6 @@ jobs:
       uses: vmactions/tribblix-vm@ab82855de3e5dc4c01933b10c6dcac8633b9c804
       with:
         mem: 4096
-        usesh: true
         debug: true
         debug-on-error: ${{ vars.DEBUG_ON_ERROR }}
         cache-after-prepare: true
@@ -1055,7 +1049,6 @@ jobs:
       uses: vmactions/tribblix-vm@ab82855de3e5dc4c01933b10c6dcac8633b9c804
       with:
         mem: 4096
-        usesh: true
         debug: true
         debug-on-error: ${{ vars.DEBUG_ON_ERROR }}
         cache-after-prepare: true
@@ -1123,7 +1116,6 @@ jobs:
       continue-on-error: true
       uses: vmactions/tribblix-vm@ab82855de3e5dc4c01933b10c6dcac8633b9c804
       with:
-        usesh: true
         debug: true
         run: |
           echo "this is an error"
@@ -1151,7 +1143,6 @@ jobs:
       continue-on-error: true
       uses: vmactions/tribblix-vm@ab82855de3e5dc4c01933b10c6dcac8633b9c804
       with:
-        usesh: true
         debug: true
         run: |
           echo "this is a normal command"
