@@ -38,9 +38,9 @@ All the supported releases are here:
 
 | Release | x86_64 |
 |---------|---------|
-| 0m41 | ✅ (rsync,scp,nfs) |
-| 0m40 | ✅ (rsync,scp,nfs) |
-| 0m39 | ✅ (rsync,scp,nfs) |
+| 0m41 | ✅ (rsync,scp,nfs,tar) |
+| 0m40 | ✅ (rsync,scp,nfs,tar) |
+| 0m39 | ✅ (rsync,scp,nfs,tar) |
 
 
 
@@ -69,7 +69,6 @@ jobs:
       uses: vmactions/tribblix-vm@v1
       with:
         envs: 'MYTOKEN MYTOKEN2'
-        usesh: true
         prepare: |
           
 
@@ -113,6 +112,8 @@ All the source code tree in the Host machine are mounted into the VM.
 All the `GITHUB_*` as well as `CI=true` env variables are passed into the VM.
 
 So, you will have the same directory and same default env variables when you `run` the CI script.
+
+The `prepare` and `run` scripts are always executed with `sh` in the VM, whatever the default login shell of the VM is.
 
 
 
