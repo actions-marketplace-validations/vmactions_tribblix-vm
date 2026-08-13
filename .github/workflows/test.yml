@@ -117,7 +117,7 @@ jobs:
     - name: Test in Tribblix
       if: ${{ contains(fromJSON('{"x86_64":["rsync","scp","nfs"],"aarch64":[],"riscv64":[],"powerpc64":[],"sparc64":[],"ppc64le":[],"s390x":[],"i386":[],"loongarch64":[]}')[matrix.arch == '' && 'x86_64' || matrix.arch], 'sshfs') }}
       id: test
-      uses: vmactions/tribblix-vm@6c588258d392a4a1a976a302376d1d5a459aaeb8
+      uses: vmactions/tribblix-vm@8c0371fd66fcf7a2de0fc740673dcec2aa8c5db0
       with:
         envs: 'DEBUG MYTOKEN MYTOKEN2'
         prepare: |
@@ -297,7 +297,7 @@ jobs:
     - name: Test in Tribblix
       if: ${{ contains(fromJSON('{"x86_64":["rsync","scp","nfs"],"aarch64":[],"riscv64":[],"powerpc64":[],"sparc64":[],"ppc64le":[],"s390x":[],"i386":[],"loongarch64":[]}')[matrix.arch == '' && 'x86_64' || matrix.arch], 'nfs') }}
       id: test
-      uses: vmactions/tribblix-vm@6c588258d392a4a1a976a302376d1d5a459aaeb8
+      uses: vmactions/tribblix-vm@8c0371fd66fcf7a2de0fc740673dcec2aa8c5db0
       with:
         envs: 'DEBUG MYTOKEN MYTOKEN2'
         prepare: |
@@ -485,7 +485,7 @@ jobs:
     - name: Test in Tribblix
       if: ${{ contains(fromJSON('{"x86_64":["rsync","scp","nfs"],"aarch64":[],"riscv64":[],"powerpc64":[],"sparc64":[],"ppc64le":[],"s390x":[],"i386":[],"loongarch64":[]}')[matrix.arch == '' && 'x86_64' || matrix.arch], 'scp') }}
       id: test
-      uses: vmactions/tribblix-vm@6c588258d392a4a1a976a302376d1d5a459aaeb8
+      uses: vmactions/tribblix-vm@8c0371fd66fcf7a2de0fc740673dcec2aa8c5db0
       with:
         envs: 'DEBUG MYTOKEN MYTOKEN2'
         prepare: |
@@ -671,7 +671,7 @@ jobs:
     - name: Test in Tribblix
       if: ${{ contains(fromJSON('{"x86_64":["rsync","scp","nfs"],"aarch64":[],"riscv64":[],"powerpc64":[],"sparc64":[],"ppc64le":[],"s390x":[],"i386":[],"loongarch64":[]}')[matrix.arch == '' && 'x86_64' || matrix.arch], 'rsync') }}
       id: test
-      uses: vmactions/tribblix-vm@6c588258d392a4a1a976a302376d1d5a459aaeb8
+      uses: vmactions/tribblix-vm@8c0371fd66fcf7a2de0fc740673dcec2aa8c5db0
       with:
         envs: 'MYTOKEN MYTOKEN2'
         prepare: |
@@ -846,7 +846,7 @@ jobs:
     - name: Test in Tribblix
       if: ${{ contains(fromJSON('{"x86_64":["rsync","scp","nfs"],"aarch64":[],"riscv64":[],"powerpc64":[],"sparc64":[],"ppc64le":[],"s390x":[],"i386":[],"loongarch64":[]}')[matrix.arch == '' && 'x86_64' || matrix.arch], 'rsync') }}
       id: test
-      uses: vmactions/tribblix-vm@6c588258d392a4a1a976a302376d1d5a459aaeb8
+      uses: vmactions/tribblix-vm@8c0371fd66fcf7a2de0fc740673dcec2aa8c5db0
       with:
         envs: 'MYTOKEN MYTOKEN2'
         prepare: |
@@ -979,7 +979,7 @@ jobs:
     - name: Test in Tribblix
       if: ${{ contains(fromJSON('{"x86_64":["rsync","scp","nfs"],"aarch64":[],"riscv64":[],"powerpc64":[],"sparc64":[],"ppc64le":[],"s390x":[],"i386":[],"loongarch64":[]}')['x86_64'], 'rsync') }}
       id: test
-      uses: vmactions/tribblix-vm@6c588258d392a4a1a976a302376d1d5a459aaeb8
+      uses: vmactions/tribblix-vm@8c0371fd66fcf7a2de0fc740673dcec2aa8c5db0
       with:
         mem: 4096
         debug: true
@@ -1046,7 +1046,7 @@ jobs:
     - name: Test in Tribblix
       if: ${{ contains(fromJSON('{"x86_64":["rsync","scp","nfs"],"aarch64":[],"riscv64":[],"powerpc64":[],"sparc64":[],"ppc64le":[],"s390x":[],"i386":[],"loongarch64":[]}')['x86_64'], 'rsync') }}
       id: test
-      uses: vmactions/tribblix-vm@6c588258d392a4a1a976a302376d1d5a459aaeb8
+      uses: vmactions/tribblix-vm@8c0371fd66fcf7a2de0fc740673dcec2aa8c5db0
       with:
         mem: 4096
         debug: true
@@ -1114,7 +1114,7 @@ jobs:
     - name: Test in Tribblix
       id: testerr
       continue-on-error: true
-      uses: vmactions/tribblix-vm@6c588258d392a4a1a976a302376d1d5a459aaeb8
+      uses: vmactions/tribblix-vm@8c0371fd66fcf7a2de0fc740673dcec2aa8c5db0
       with:
         debug: true
         run: |
@@ -1141,7 +1141,7 @@ jobs:
     - name: Test in Tribblix
       id: testpass
       continue-on-error: true
-      uses: vmactions/tribblix-vm@6c588258d392a4a1a976a302376d1d5a459aaeb8
+      uses: vmactions/tribblix-vm@8c0371fd66fcf7a2de0fc740673dcec2aa8c5db0
       with:
         debug: true
         run: |
