@@ -117,6 +117,12 @@ jobs:
             arch: loongarch64
           - release: ""
             arch: armv7
+          - release: "0m39"
+            arch: ""
+          - release: "0m40"
+            arch: ""
+          - release: ""
+            arch: ""
 
 
     runs-on: ${{ matrix.runs }}
