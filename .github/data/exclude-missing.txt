@@ -34,6 +34,24 @@
             arch: loongarch64
           - release: "0m40"
             arch: armv7
+          - release: "0m41"
+            arch: aarch64
+          - release: "0m41"
+            arch: riscv64
+          - release: "0m41"
+            arch: powerpc64
+          - release: "0m41"
+            arch: sparc64
+          - release: "0m41"
+            arch: ppc64le
+          - release: "0m41"
+            arch: s390x
+          - release: "0m41"
+            arch: i386
+          - release: "0m41"
+            arch: loongarch64
+          - release: "0m41"
+            arch: armv7
           - release: ""
             arch: aarch64
           - release: ""

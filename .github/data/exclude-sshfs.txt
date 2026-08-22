@@ -2,5 +2,7 @@
             arch: ""
           - release: "0m40"
             arch: ""
+          - release: "0m41"
+            arch: ""
           - release: ""
             arch: ""
