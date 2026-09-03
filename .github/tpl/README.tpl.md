@@ -1,13 +1,31 @@
 # Run GitHub CI in {{VM_NAME}} 
 
 ![Test](https://github.com/{{GITHUB_REPOSITORY}}/workflows/Test/badge.svg)
-[![Release](https://img.shields.io/github/v/release/{{GITHUB_REPOSITORY}}?include_prereleases&sort=semver&display_name=tag)](https://github.com/{{GITHUB_REPOSITORY}}/releases)
 
 
 
 See all the supported VMs: [VMActions.org](https://vmactions.org)
 
 Powered by [AnyVM.org](https://anyvm.org)
+
+## :robot: AI Ready
+
+> [!TIP]
+> **You don't need to write this workflow by hand.**
+>
+> These VMs are now AI-ready. With the **[vmactions-ci skill](https://github.com/vmactions/vmactions-skill)**, an AI coding agent -- Claude Code, Codex, Copilot CLI, Gemini CLI, and others -- understands the full vmactions interface and writes the GitHub Actions CI for you, **automatically**.
+>
+> Just describe what you want in plain language, e.g. *"run my tests on {{VM_NAME}}"* or *"check that my project builds on {{VM_NAME}} aarch64"*, and the agent generates a correct, ready-to-commit `test.yml`. It will:
+>
+> - pick the right action, `release`, and `arch` for your target;
+> - install your toolchain and dependencies in the `prepare` step;
+> - forward your secrets and environment variables into the VM;
+> - sync your source code in and back out; and
+> - steer around the common footguns -- the per-OS default shell, the `riscv64` sync method, keeping `runs-on: ubuntu-latest` even for other arches, pinning the action version, and more.
+>
+> No need to memorize releases, architectures, package managers, or shells -- the agent handles it. Install the skill once and just ask.
+>
+> ### >> [Get the vmactions-ci skill](https://github.com/vmactions/vmactions-skill) <<
 
 Use this action to run your CI in {{VM_NAME}}.
 
@@ -37,13 +55,12 @@ jobs:
       MYTOKEN : ${{ secrets.MYTOKEN }}
       MYTOKEN2: "value2"
     steps:
-    - uses: actions/checkout@v6
+    - uses: actions/checkout@v7
     - name: Test in {{VM_NAME}}
       id: test
       uses: {{GITHUB_REPOSITORY}}@{{LATEST_MAJOR}}
       with:
         envs: 'MYTOKEN MYTOKEN2'
-        usesh: true
         prepare: |
           {{VM_PREPARE}}
 
@@ -76,6 +93,8 @@ All the `GITHUB_*` as well as `CI=true` env variables are passed into the VM.
 
 So, you will have the same directory and same default env variables when you `run` the CI script.
 
+The `prepare` and `run` scripts are always executed with `sh` in the VM, whatever the default login shell of the VM is.
+
 {{VM_SHELL_COMMENTS}}
 
 
@@ -104,7 +123,7 @@ The code is shared from the host to the VM via `rsync` by default, you can choos
 You can also set `sync: no`, so the files will not be synced to the  VM.
 
 
-When using `rsync` or `scp`,  you can define `copyback: false` to not copy files back from the VM in to the host.
+When using a copy based sync method (`rsync`, `scp`, `tar` or `9p`), you can define `copyback: false` to not copy files back from the VM to the host. It has no effect on `sshfs` and `nfs`, which are live mounts and never copy back.
 
 
 ```yaml
@@ -190,7 +209,7 @@ It uses [the {{VM_NAME}} {{DEFAULT_RELEASE}}](conf/default.release.conf) by defa
 ...
 ```
 
-
+{{RELEASE_PREFIX_DOC}}
 ## 6. Select architecture
 
 The vm is using x86_64(AMD64) by default, but you can use `arch` option to change the architecture:
@@ -218,7 +237,7 @@ Support custom shell:
 ```yaml
 ...
     steps:
-    - uses: actions/checkout@v6
+    - uses: actions/checkout@v7
     - name: Start VM
       id: vm
       uses: {{GITHUB_REPOSITORY}}@{{LATEST_MAJOR}}
@@ -239,12 +258,17 @@ Support custom shell:
 
 The custom shell will automatically `cd` into `$GITHUB_WORKSPACE` if it exists before running your commands.
 
+How file changes propagate between the host and the VM depends on the `sync` method:
+
+- `sync: nfs` or `sync: sshfs`: the workspace is a live mount, so file changes are visible on both sides immediately.
+- `sync: rsync` or `sync: scp`: the wrapper syncs the workspace to the VM before each custom shell step and syncs it back afterwards, so files created in the VM are available to later host steps (and vice versa). `rsync` transfers are incremental; `scp` copies the whole workspace each time, which can be slow for large workspaces.
+
 You can also use `custom-shell-name` to set a custom name for the shell wrapper:
 
 ```yaml
 ...
     steps:
-    - uses: actions/checkout@v6
+    - uses: actions/checkout@v7
     - name: Start VM
       id: vm
       uses: {{GITHUB_REPOSITORY}}@{{LATEST_MAJOR}}
@@ -282,7 +306,7 @@ If the time in VM is not correct, You can use `sync-time` option to synchronize 
 
 ## 9. Disable cache
 
-By default, the action caches `apt` packages on the host and VM images/artifacts. You can use the `disableCache` option to disable this:
+By default, the action caches `apt` packages on the host and VM images/artifacts. You can use the `disable-cache` option to disable this:
 
 ```yml
 ...
@@ -295,7 +319,34 @@ By default, the action caches `apt` packages on the host and VM images/artifacts
 ```
 
 
-## 10. Debug on error
+## 10. Cache the VM image after prepare
+
+The `prepare` step (installing packages etc.) normally runs on every build. With `cache-after-prepare: true`, the action shuts the VM down cleanly after `prepare` has finished, caches the prepared VM image, and boots the VM again before `run`. Later runs with the same `prepare` script restore the prepared image, skip `prepare` entirely, and start directly at `run`:
+
+```yml
+...
+    - name: Test
+      id: test
+      uses: {{GITHUB_REPOSITORY}}@{{LATEST_MAJOR}}
+      with:
+        cache-after-prepare: true
+        prepare: |
+          {{VM_PREPARE}}
+        run: |
+          ...
+...
+```
+
+Notes:
+
+- The cache key includes a hash of the `prepare` script and the `sync` method, so changing either of them rebuilds the prepared image from the base image.
+- The source tree is still synchronized into the VM on every run; only the `prepare` step is skipped.
+- The first run (or any run after `prepare` changes) takes longer: the VM is shut down after `prepare`, the prepared image is cached, and the VM boots again before `run`.
+- The action output `cache-after-prepare-hit` is `true` when a prepared image was restored and `prepare` was skipped.
+- The option is ignored when `disable-cache: true` is set or when `prepare` is empty.
+
+
+## 11. Debug on error
 
 If you want to debug the VM when the `prepare` or `run` step fails, you can set `debug-on-error: true`.
 
@@ -346,8 +397,7 @@ We use Qemu to run the {{VM_NAME}} VM.
 
 # Upcoming features:
 
-1. Support other architectures, eg: sparc64 or powerpc64.
-2. Support MacOS runner and Windows runner.
+1. Support MacOS runner and Windows runner.
 
 
 

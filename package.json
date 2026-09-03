@@ -1,6 +1,6 @@
 {
   "name": "vmactions-Tribblix",
-  "version": "",
+  "version": "1.0.5",
   "description": "GitHub actions for Tribblix",
   "type": "module",
   "main": "index.js",
